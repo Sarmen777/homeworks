@@ -85,7 +85,7 @@ class Program
         for (int i = 4 ; i < 8 ; i++){
             password[i] = all[random.Next(all.Length)];
         }
-        for (int i = 0 ; i < 8 ; i++){
+        for (int i = 0 ; i < 4 ; i++){
             char tmp = password[i];
             password[i] = password[8-i-1];
             password[8-i-1] = tmp;
