@@ -637,6 +637,88 @@ class Program
         }
         }
     }
- 
+ public class TaskItem
+{
+    public string Description;
+    public bool IsCompleted;
+
+    public TaskItem(string description)
+    {
+        Description = description;
+    }
+    public void MarkComplete(){
+        IsCompleted = true;
+    }
+    public void MarkInComplete(){
+        IsCompleted = false;
+    }
+    public void DisplayInfo(){
+        string status = IsCompleted ? "Completed" : "Not completed";
+        Console.WriteLine($"{Description} : {status}");
+    }
+}
+
+class Program{
+    static void Main(){
+        List<TaskItem> tasks = new List<TaskItem>();
+
+        while(true){
+          Console.WriteLine("input 1 to add , 2 to remove , 3 - to mark complete , 4 - to mark incomplete ,5 - to view all - 6 to exit");
+          Console.Write("Input : ");
+          string x = Console.ReadLine();
+
+          switch(x){
+            case "1":
+            Console.Write("Enter description : ");
+            string description = Console.ReadLine();
+            tasks.Add(new TaskItem(description));
+            Console.WriteLine("Task added");
+            break;
+
+            case "2":
+            Console.WriteLine("input description to remove");
+            string removeDescription = Console.ReadLine();
+            TaskItem TaskToRemove = tasks.Find(t => t.Description == removeDescription);
+            if (TaskToRemove != null){
+                tasks.Remove(TaskToRemove);
+                Console.WriteLine("Task removed");
+            }
+            else {
+                Console.WriteLine("Task is not found");
+            }
+            break;
+
+            case "3":
+            Console.Write("input description to mark as completed : ");
+            string CompleteDescription = Console.ReadLine();
+            TaskItem TaskToMark = tasks.Find(t => t.Description == CompleteDescription);
+            if (TaskToMark != null){
+                TaskToMark.MarkComplete();
+            }
+            else {
+                Console.WriteLine("Task is not found");
+            }
+            break;
+            case "4":
+            Console.Write("input description to mark as not completed");
+            string IncompleteDescription  = Console.ReadLine();
+            TaskItem TaskToUnmark = tasks.Find(t => IncompleteDescription == t.Description);
+            if (TaskToUnmark != null){
+                TaskToUnmark.MarkInComplete();
+            }
+            else {
+                Console.WriteLine("Task is not found");
+            }
+            break;
+            case "5":
+            foreach(var i in tasks){
+                i.DisplayInfo();
+            }            
+            break;
+            
+            case "6": return;
+          }
+        }
+    }
     
 
