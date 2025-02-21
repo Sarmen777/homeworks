@@ -1,304 +1,264 @@
 using System;
-
+using System.ComponentModel;
 /*
-class Program
+class Calculator
 {
-  private class Student
+    static int Add(int a, int b) => a + b;
+    static int Subtract(int a, int b) => a - b;
+    static int Multiply(int a, int b) => a * b;
+    static int Divide(int a, int b) => b != 0 ? a / b : 0;
+
+    static void Run()
     {
-        private string name;
-       private int studentId;
-       private int gradeLevel;
-        public Student (string name , int studentId , int gradeLevel ){
-            this.name = name;
-            this.studentId = studentId;
-            this.gradeLevel = gradeLevel;
-        }
-        public void ShowStudentInfo(){
-            Console.WriteLine ($"Student : {name} - {studentId} and grade : {gradeLevel}");
-        }
-        
-    }
-    static void Main(){
-        Student student1 = new Student("Sarmen", 101, 10);
-        Student student2 = new Student("Gor", 102, 11);
-        Student student3 = new Student("Gagik", 103, 9);
-     
-        student1.ShowStudentInfo();
-        student2.ShowStudentInfo();
-        student3.ShowStudentInfo();
-    }
-}
+        Console.WriteLine("Input + , - , * , / or x to exit");
+        string op = Console.ReadLine();
 
-class Program
-{
-    private class FlightTicket
-    {
-        private string passengerName;
-        private string flightNumber;
-        private string seatNumber;
-        public FlightTicket(string passengerName, string flightNumber, string seatNumber)
+        if (op == "x") return;
+
+        Console.WriteLine("input numbers");
+
+        int a = Convert.ToInt32(Console.ReadLine());
+
+        int b = Convert.ToInt32(Console.ReadLine());
+
+        int result = op switch
         {
-            this.passengerName = passengerName;
-            this.flightNumber = flightNumber;
-            this.seatNumber = seatNumber;
-        }
-        public void ShowTicketInfo()
-        {
-            Console.WriteLine($"Passenger: {passengerName}, Flight: {flightNumber}, Seat: {seatNumber}");
-        }
-    }
-
-    static void Main()
-    {
-        
-        FlightTicket ticket1 = new FlightTicket("Sarmen", "SU123", "12A");
-        FlightTicket ticket2 = new FlightTicket("Gor", "AF456", "8C");
-        FlightTicket ticket3 = new FlightTicket("Stepan", "LH789", "5B");
-
-        
-        ticket1.ShowTicketInfo();
-        ticket2.ShowTicketInfo();
-        ticket3.ShowTicketInfo();
-    }
-}
-class Program
-{
-    private class FileDownload
-    {
-        public FileDownload(){
-            Console.WriteLine("Download started");
-        }
-        ~FileDownload()
-        {
-            Console.WriteLine("Download Completed");
-        }
-    }
-    static void StartDownload(){
-        FileDownload file = new FileDownload();
-    }
-    static void Main(){
-        StartDownload();
-
-        Console.WriteLine("Program ended");
-    }
-}
-
-class Program
-{
-    private class WeatherReport
-    {
-        public float temperature;
-        public int humidity;
-        public string weatherCondition;
-        public WeatherReport(float temperature, int humidity, string weatherCondition)
-        {
-            this.temperature = temperature;
-            this.humidity = humidity;
-            this.weatherCondition = weatherCondition;
-        }
-
-        public void ShowReport()
-        {
-            Console.WriteLine($"Temperature: {temperature}°C, Humidity: {humidity}%, Condition: {weatherCondition}");
-        }
-    }
-
-    static void Main()
-    {
-        WeatherReport[] reports = new WeatherReport[]
-        {
-            new WeatherReport(22.5f, 65, "Hot"),
-            new WeatherReport(18.0f, 80, "Cold"),
-            new WeatherReport(30.0f, 50, "Hot"),
-            new WeatherReport(10.0f, 90, "Rain")
+            "+" => Add(a, b),
+            "-" => Subtract(a, b),
+            "*" => Multiply(a, b),
+            "/" => Divide(a, b),
+            _=> 0
         };
-        foreach(var i in reports){
-            i.ShowReport();
-        }
+
+        Console.WriteLine("Result: " + result);
+        Run();
+    }
+
+    static void Main()
+    {
+        Run();
     }
 }
 
 class Program
 {
-    private class Smartwatch
+    static void Swap(ref int a, ref int b)
     {
-        private string ownerName;
-        private uint stepCount;
-
-        public Smartwatch(string ownerName)
-        {
-            this.ownerName = ownerName;
-            stepCount = 0;
-        }
-        public void AddSteps(uint steps){
-            stepCount += steps;
-        }
-        public void ShowSteps(){
-            Console.WriteLine($"User : {ownerName} have {stepCount} steps");
-        }
+        int temp = a;
+        a = b;
+        b = temp;
     }
-    static void Main(){
-        Smartwatch x = new Smartwatch("Sarmen");
 
-        x.AddSteps(15000);
+    static void Main()
+    {
+        int a = Convert.ToInt32(Console.ReadLine());
+        int b = Convert.ToInt32(Console.ReadLine());
+        Console.WriteLine($"Before swapping: a = {a}, b = {b}");
+        
+        Swap(ref a, ref b);
 
-        x.ShowSteps();
+        Console.WriteLine($"After swapping: a = {a}, b = {b}");
     }
 }
 
 class Program
 {
-    private class Movie
+    static void FindMax(ref int max, params int[] numbers)
     {
-        private int _rating;
-
-        public int Rating
+        if (numbers.Length == 0)
         {
-            get { return _rating; }
-            set
-            {
-                if (value >= 1 && value <= 5)
-                {
-                    _rating = value;
-                }
-                else
-                {
-                    Console.WriteLine("Raiting must be from 1 to 5");
-                }
-            }
+            Console.WriteLine("There is no arguments");
+            return;
         }
-        public void ShowRating()
+
+        max = numbers[0];
+
+        foreach (int num in numbers)
         {
-            Console.WriteLine($"Rating: {_rating}");
+            if (num > max)
+                max = num;
         }
     }
 
     static void Main()
     {
+        int max = 0;
+        int[] x = new int[3];
+        Console.WriteLine("Input numbers");
+        int a = Convert.ToInt32(Console.ReadLine());
+        int b = Convert.ToInt32(Console.ReadLine());
+        int c = Convert.ToInt32(Console.ReadLine());
+        FindMax(ref max, a , b , c);
+        Console.WriteLine($"Max: {max}");
+    }
+}
+
+class Program
+{
+    static void ConvertTemperature(double celsius, out double fahrenheit, out double kelvin)
+    {
+        fahrenheit = (celsius * 9 / 5) + 32; 
+        kelvin = celsius + 273.15;          
+    }
+
+    static void Main()
+    {
+        Console.WriteLine($"Input celsius");
+        
+        double celsius = Convert.ToDouble(Console.ReadLine());
+
+        double fahrenheit, kelvin;
+        ConvertTemperature(celsius, out fahrenheit, out kelvin);
+
+        Console.WriteLine($"Celsius: {celsius}");
+        Console.WriteLine($"Fahrenheit: {fahrenheit}");
+        Console.WriteLine($"Kelvin : {kelvin}");
+    }
+}
+
+class CircleCalculations
+{
     
-        Movie movie = new Movie();
-
-        movie.Rating = 4;  
-        movie.ShowRating();
-
-        movie.Rating = 6;  
-        movie.ShowRating();
-    }
-}
-
-class Program
-{
-    private class WorkoutSession
+    static void CalculateCircle(double radius, ref double area, out double perimeter)
     {
-        private string exerciseType;
-        private int durationInMinutes;
-
-        public WorkoutSession(string exerciseType, int durationInMinutes)
-        {
-            this.exerciseType = exerciseType;
-            this.durationInMinutes = durationInMinutes;
-        }
-        public void ShowWorkoutDetails()
-        {
-            Console.WriteLine($"Type: {exerciseType}, Duration: {durationInMinutes} minutes.");
-        }
+        area = Math.PI * radius * radius; 
+        perimeter = 2 * Math.PI * radius;
     }
 
     static void Main()
     {
-        WorkoutSession workout1 = new WorkoutSession("Yoga", 30);
-        WorkoutSession workout2 = new WorkoutSession("Strength training", 45);
-        WorkoutSession workout3 = new WorkoutSession("Running", 60);
+        Console.Write("Enter the radius");
+        double radius = Convert.ToDouble(Console.ReadLine());
 
-        workout1.ShowWorkoutDetails();
-        workout2.ShowWorkoutDetails();
-        workout3.ShowWorkoutDetails();
+        double area = 0;
+        double perimeter;
+
+        
+        CalculateCircle(radius, ref area, out perimeter);
+
+        Console.WriteLine($"The area : {area}");
+        Console.WriteLine($"The perimeter : {perimeter}");
     }
 }
 
 class Program
 {
-    private class Product
-    {
-        private string name;
-        private int price;
-        private int stockQuantity;
-
-        public Product(string name, int price, int stockQuantity)
-        {
-            this.name = name;               
-            this.price = price;
-            this.stockQuantity = stockQuantity;
-        }
-
-        public void ShowProductDetails()
-        {
-            Console.WriteLine($"Name : {name} , price : {price} , quantity {stockQuantity}");
-        }
-    }
-
-    static void Main()
-    {
-        Product product1 = new Product("Laptop", 100, 5);
-        product1.ShowProductDetails();
-    }
-}
-
-class Program
-{
-    private partial class Character
-    {
-        private string characterName;
-        private int level;
-
-        public Character(string characterName , int level){
-            this.characterName = characterName;
-            this.level = level;
-        }
-    }
-    private partial class Character
-    {
-        public void ShowCharacterInfo(){
-            Console.WriteLine($"Name : {characterName} Level : {level}");
+    static void Sum(ref int s ,params int[] numbers){
+        foreach(int i in numbers){
+            s += i;
         }
     }
     static void Main(){
-        Character character = new Character("Sarmen" , 15);
-        character.ShowCharacterInfo();
+        int s = 0;
+        Console.WriteLine("Input numbers");
+        int a = Convert.ToInt32(Console.ReadLine());
+        int b = Convert.ToInt32(Console.ReadLine());
+        int c = Convert.ToInt32(Console.ReadLine());
+
+        Sum(ref s , a , b , c);
+        Console.WriteLine(s);
+    }
+}
+
+class QuadraticEquationSolver
+{
+    static void SolveQuadratic(double a, double b, double c, ref double x1, out double x2)
+    {
+        double discriminant = b * b - 4 * a * c;
+        if (discriminant < 0)
+        {
+            x1 = 0;
+            x2 = 0;
+          Console.WriteLine("Error : discriminant can't be below 0");
+        }
+        else
+        {
+            double sqrtDiscriminant = Math.Sqrt(discriminant);
+            x1 = (-b + sqrtDiscriminant) / (2 * a);
+            x2 = (-b - sqrtDiscriminant) / (2 * a);
+        }
+    }
+
+    static void Main()
+    {
+        double a = Convert.ToDouble(Console.ReadLine());
+        double b = Convert.ToDouble(Console.ReadLine());
+        double c = Convert.ToDouble(Console.ReadLine());
+
+        double x1 = 0;
+        double x2;
+
+        SolveQuadratic(a, b, c, ref x1, out x2);
+        
+        Console.WriteLine($"The roots: x1 = {x1} and x2 = {x2}");
+    }
+}
+
+class Program
+{
+    static int fib(int n){
+        if (n <= 1){
+            return n;
+        }
+        return fib(n-1) + fib(n-2);
+    }
+    static void Main(){
+        int n = Convert.ToInt32(Console.ReadLine());
+        int res = fib(n);
+        Console.WriteLine($"number of fibonacci: {res}");
+    }
+}
+
+class TimeConverter
+{  
+    static void ConvertSeconds(int totalSeconds, ref int hours, out int minutes, out int seconds)
+    {
+        hours = totalSeconds / 3600;             
+        int remaining = totalSeconds % 3600;
+        minutes = remaining / 60;         
+        seconds = remaining % 60;         
+    }
+
+    static void Main()
+    {
+        Console.Write("Enter seconds: ");
+        int totalSeconds = Convert.ToInt32(Console.ReadLine());
+
+        int hours = 0;
+        int minutes; 
+        int seconds;
+
+        ConvertSeconds(totalSeconds, ref hours, out minutes, out seconds);
+
+        Console.WriteLine($"Results: {hours} hours, {minutes} minutes, {seconds} seconds");
     }
 }
 */
-class Program
+class LongestWordFinder
 {
-    private class Course
+    static string FindLongestWord(params string[] words)
     {
-        private string courseName;
-        private string instructor;
-        private int maxStudents;
-
-        public Course(string courseName, string instructor, int maxStudents)
+        string longest = "";
+        foreach (string word in words)
         {
-            this.courseName = courseName;
-            this.instructor = instructor;
-            this.maxStudents = maxStudents;
+            if (word.Length > longest.Length)
+            {
+                longest = word;
+            }
         }
-
-        public void ShowCourseDetails()
-        {
-            Console.WriteLine($"Course Name: {courseName} , Instructor : {instructor} , max : {maxStudents}");
-        }
+        return longest;
     }
 
     static void Main()
     {
-        Course[] courses = new Course[]{
-        new Course("Introduction to Programming", "Baghmayan", 30),
-        new Course("Data Structures and Algorithms", "Araqelyan", 25),
-        new Course("Web Development", "Hakobyan", 40)
-        };
-        foreach(var i in courses){
-            i.ShowCourseDetails();
-        }
+        Console.Write("Enter words separated by spaces: ");
+        string input = Console.ReadLine();
+
+        string[] words = input.Split(' ');
+
+        string longestWord = FindLongestWord(words);
+
+        Console.WriteLine($"Longest: {longestWord}");
     }
 }
     
