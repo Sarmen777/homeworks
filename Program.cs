@@ -1,265 +1,161 @@
 using System;
-using System.ComponentModel;
 /*
-class Calculator
-{
-    static int Add(int a, int b) => a + b;
-    static int Subtract(int a, int b) => a - b;
-    static int Multiply(int a, int b) => a * b;
-    static int Divide(int a, int b) => b != 0 ? a / b : 0;
+class BankAccount
+ {
+    public int AccountNumber{get; private set;}
+    public string CustomerName{get; private set;}
+    public decimal Balance {get; private set;}
 
-    static void Run()
+    public BankAccount(int accountNumber, string customerName, decimal balance = 0)
     {
-        Console.WriteLine("Input + , - , * , / or x to exit");
-        string op = Console.ReadLine();
+        AccountNumber = accountNumber;
+        CustomerName = customerName;
+        Balance = balance;
+    }
 
-        if (op == "x") return;
+     public override string ToString()
+    {
+         return $"Customer name: {CustomerName} Account number: {AccountNumber} Balance: {Balance}$ ";
+     }
+     
 
-        Console.WriteLine("input numbers");
-
-        int a = Convert.ToInt32(Console.ReadLine());
-
-        int b = Convert.ToInt32(Console.ReadLine());
-
-        int result = op switch
+    public override bool Equals(object? obj)
+    {
+        if (obj is BankAccount other)
         {
-            "+" => Add(a, b),
-            "-" => Subtract(a, b),
-            "*" => Multiply(a, b),
-            "/" => Divide(a, b),
-            _=> 0
-        };
-
-        Console.WriteLine("Result: " + result);
-        Run();
-    }
-
-    static void Main()
-    {
-        Run();
-    }
-}
-
-class Program
-{
-    static void Swap(ref int a, ref int b)
-    {
-        int temp = a;
-        a = b;
-        b = temp;
-    }
-
-    static void Main()
-    {
-        int a = Convert.ToInt32(Console.ReadLine());
-        int b = Convert.ToInt32(Console.ReadLine());
-        Console.WriteLine($"Before swapping: a = {a}, b = {b}");
-        
-        Swap(ref a, ref b);
-
-        Console.WriteLine($"After swapping: a = {a}, b = {b}");
-    }
-}
-
-class Program
-{
-    static void FindMax(ref int max, params int[] numbers)
-    {
-        if (numbers.Length == 0)
-        {
-            Console.WriteLine("There is no arguments");
-            return;
+            return this.AccountNumber == other.AccountNumber;
         }
+        return false;
+     }
 
-        max = numbers[0];
-
-        foreach (int num in numbers)
-        {
-            if (num > max)
-                max = num;
-        }
-    }
-
-    static void Main()
+    public override int GetHashCode()
     {
-        int max = 0;
-        int[] x = new int[3];
-        Console.WriteLine("Input numbers");
-        int a = Convert.ToInt32(Console.ReadLine());
-        int b = Convert.ToInt32(Console.ReadLine());
-        int c = Convert.ToInt32(Console.ReadLine());
-        FindMax(ref max, a , b , c);
-        Console.WriteLine($"Max: {max}");
+        return HashCode.Combine(this.AccountNumber, this.Balance, this.CustomerName);
     }
-}
 
-class Program
-{
-    static void ConvertTemperature(double celsius, out double fahrenheit, out double kelvin)
+    public static BankAccount operator +(BankAccount account1, int deposit)
     {
-        fahrenheit = (celsius * 9 / 5) + 32; 
-        kelvin = celsius + 273.15;          
+        account1.Balance += deposit;
+        return account1;
     }
 
-    static void Main()
+    public static BankAccount operator -(BankAccount account1, int withdraw)
     {
-        Console.WriteLine($"Input celsius");
-        
-        double celsius = Convert.ToDouble(Console.ReadLine());
+        if(account1.Balance < withdraw)
+         {
+             System.Console.WriteLine("Balance can not be negative");
+             return account1;
+         }
+         account1.Balance -= withdraw;
+         return account1;
+     }
 
-        double fahrenheit, kelvin;
-        ConvertTemperature(celsius, out fahrenheit, out kelvin);
+     public static bool operator > (BankAccount account1, BankAccount account2)
+     {
+         return account1.Balance > account2.Balance;
+     }
 
-        Console.WriteLine($"Celsius: {celsius}");
-        Console.WriteLine($"Fahrenheit: {fahrenheit}");
-        Console.WriteLine($"Kelvin : {kelvin}");
-    }
-}
+     public static bool operator < (BankAccount account1, BankAccount account2)
+     {
+         return account1.Balance < account2.Balance;
+     }
 
-class CircleCalculations
-{
-    
-    static void CalculateCircle(double radius, ref double area, out double perimeter)
-    {
-        area = Math.PI * radius * radius; 
-        perimeter = 2 * Math.PI * radius;
-    }
+     public static bool operator >= (BankAccount account1, BankAccount account2)
+     {
+         return account1.Balance >= account2.Balance;
+     }
 
-    static void Main()
-    {
-        Console.Write("Enter the radius");
-        double radius = Convert.ToDouble(Console.ReadLine());
+     public static bool operator <= (BankAccount account1, BankAccount account2)
+     {
+         return account1.Balance <= account2.Balance;
+     }
 
-        double area = 0;
-        double perimeter;
 
-        
-        CalculateCircle(radius, ref area, out perimeter);
-
-        Console.WriteLine($"The area : {area}");
-        Console.WriteLine($"The perimeter : {perimeter}");
-    }
-}
-
-class Program
-{
-    static void Sum(ref int s ,params int[] numbers){
-        foreach(int i in numbers){
-            s += i;
-        }
-    }
-    static void Main(){
-        int s = 0;
-        Console.WriteLine("Input numbers");
-        int a = Convert.ToInt32(Console.ReadLine());
-        int b = Convert.ToInt32(Console.ReadLine());
-        int c = Convert.ToInt32(Console.ReadLine());
-
-        Sum(ref s , a , b , c);
-        Console.WriteLine(s);
-    }
-}
-
-class QuadraticEquationSolver
-{
-    static void SolveQuadratic(double a, double b, double c, ref double x1, out double x2)
-    {
-        double discriminant = b * b - 4 * a * c;
-        if (discriminant < 0)
-        {
-            x1 = 0;
-            x2 = 0;
-          Console.WriteLine("Error : discriminant can't be below 0");
-        }
-        else
-        {
-            double sqrtDiscriminant = Math.Sqrt(discriminant);
-            x1 = (-b + sqrtDiscriminant) / (2 * a);
-            x2 = (-b - sqrtDiscriminant) / (2 * a);
-        }
-    }
-
-    static void Main()
-    {
-        double a = Convert.ToDouble(Console.ReadLine());
-        double b = Convert.ToDouble(Console.ReadLine());
-        double c = Convert.ToDouble(Console.ReadLine());
-
-        double x1 = 0;
-        double x2;
-
-        SolveQuadratic(a, b, c, ref x1, out x2);
-        
-        Console.WriteLine($"The roots: x1 = {x1} and x2 = {x2}");
-    }
-}
-
-class Program
-{
-    static int fib(int n){
-        if (n <= 1){
-            return n;
-        }
-        return fib(n-1) + fib(n-2);
-    }
-    static void Main(){
-        int n = Convert.ToInt32(Console.ReadLine());
-        int res = fib(n);
-        Console.WriteLine($"number of fibonacci: {res}");
-    }
-}
-
-class TimeConverter
-{  
-    static void ConvertSeconds(int totalSeconds, ref int hours, out int minutes, out int seconds)
-    {
-        hours = totalSeconds / 3600;             
-        int remaining = totalSeconds % 3600;
-        minutes = remaining / 60;         
-        seconds = remaining % 60;         
-    }
-
-    static void Main()
-    {
-        Console.Write("Enter seconds: ");
-        int totalSeconds = Convert.ToInt32(Console.ReadLine());
-
-        int hours = 0;
-        int minutes; 
-        int seconds;
-
-        ConvertSeconds(totalSeconds, ref hours, out minutes, out seconds);
-
-        Console.WriteLine($"Results: {hours} hours, {minutes} minutes, {seconds} seconds");
-    }
-}
+ }
+ class Program
+ {
+     static void Main()
+     {
+         BankAccount account = new BankAccount(1, "John");
+         account += 2400;
+         System.Console.WriteLine(account);
+     }
+ }
 */
-class LongestWordFinder
+class Vector3D
 {
-    static string FindLongestWord(params string[] words)
+    public int X {get; private set;}
+    public int Y {get; private set;}
+    public int Z {get; private set;}
+
+    public Vector3D(int x, int y, int z)
     {
-        string longest = "";
-        foreach (string word in words)
+        X = z;
+        Y = y;
+        Z = z;
+    }
+
+    public override string ToString()
+    {
+        return $"X: {X}, Y: {Y}, Z: {Z}";
+    }
+
+    public static Vector3D operator +(Vector3D vec1, Vector3D vec2)
+    {
+        return new Vector3D(vec1.X + vec2.X, vec1.Y + vec2.Y,vec1.Z + vec2.Z);
+    }
+
+    public static Vector3D operator -(Vector3D vec1, Vector3D vec2)
+    {
+        return new Vector3D(vec1.X - vec2.X, vec1.Y - vec2.Y,vec1.Z - vec2.Z);
+    }
+
+    public static Vector3D operator *(Vector3D vec1, Vector3D vec2)
+    {
+        return new Vector3D(vec1.X * vec2.X, vec1.Y * vec2.Y,vec1.Z * vec2.Z);
+    }
+
+    public static Vector3D operator /(Vector3D vec1, Vector3D vec2)
+    {
+        if (vec2.X == 0 || vec2.Y == 0 || vec2.Z == 0)
         {
-            if (word.Length > longest.Length)
-            {
-                longest = word;
-            }
+            System.Console.WriteLine("Cant divide by 0 , returning vector by default coordiantes");
+            return new Vector3D(0,0,0);
         }
-        return longest;
+        return new Vector3D(vec1.X - vec2.X, vec1.Y - vec2.Y,vec1.Z - vec2.Z);
     }
 
-    static void Main()
+    public static bool operator ==(Vector3D vec1, Vector3D vec2)
     {
-        Console.Write("Enter words separated by spaces: ");
-        string input = Console.ReadLine();
-
-        string[] words = input.Split(' ');
-
-        string longestWord = FindLongestWord(words);
-
-        Console.WriteLine($"Longest: {longestWord}");
+        return vec2.X == vec1.X && vec2.Y == vec1.Y && vec2.Z == vec1.Z;
     }
+    public static bool operator !=(Vector3D vec1, Vector3D vec2)
+    {
+        return vec2.X != vec1.X || vec2.Y != vec1.Y || vec2.Z != vec1.Z;
+    }
+    public static bool operator true(Vector3D vec1)
+    {
+        return vec1.X != 0 && vec1.Y != 0 && vec1.Z !=0;
+    }
+
+    public static bool operator false(Vector3D vec1)
+    {
+        return vec1.X == 0 || vec1.Y == 0 || vec1.Z ==0;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is Vector3D other)
+        {
+            return (Vector3D)obj == other;
+        }
+        return false;
+    }
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X,Y,Z);
+    }
+
 }
     
 
