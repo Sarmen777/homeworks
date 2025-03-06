@@ -320,4 +320,66 @@ class Program
         account2.ShowBalance();
     }
 }
-/*Task 5 **************************************************************/
+
+/*Task 5 *****************************************************************************/
+class CachedObject
+{
+    public string Data;
+
+    public CachedObject(string data)
+    {
+        Data = data;
+    }
+}
+
+class SimpleCache
+{
+    private static int totalCachedObjects = 0;
+    private CachedObject[] cache;
+    private int count = 0;
+
+    public SimpleCache(int maxSize)
+    {
+        cache = new CachedObject[maxSize];
+    }
+
+    public void Add(string data)
+    {
+        if (count >= cache.Length) 
+        {
+            for (int i = 1; i < cache.Length; i++)
+            {
+                cache[i - 1] = cache[i];
+            }
+            count--; 
+        }
+
+        cache[count] = new CachedObject(data);
+        count++;
+        totalCachedObjects++;
+    }
+
+    public CachedObject this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= count)
+                throw new IndexOutOfRangeException("Invalid  index");
+            return cache[index];
+        }
+    }
+
+    public void PrintCache()
+    {
+        Console.WriteLine("Cache data:");
+        for (int i = 0; i < count; i++)
+        {
+            Console.WriteLine(cache[i].Data);
+        }
+    }
+
+    public static void PrintTotalCachedObjects()
+    {
+        Console.WriteLine($"Total  objects: {totalCachedObjects}");
+    }
+}
