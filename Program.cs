@@ -1,51 +1,28 @@
 using System;
-/*
-class WaterTank
+/* Task 1 */
+class Person
 {
-     private double Capacity = 10000;
-     private double CurrentLevel;
-
-    public WaterTank()
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    
+    private string? _fullName;
+    
+    public string FullName
     {
-        CurrentLevel = 0;
-    }
-    public WaterTank(double CurrentLevel)
-    {
-        this.CurrentLevel = CurrentLevel;    
-    }
-    public override string ToString() 
-    {
-        return $"Capacity: {Capacity}, CurrentLevel: {CurrentLevel}";
-    }
-    public static void Transfer(WaterTank obj1 ,WaterTank obj2 ,double amount)
-    {
-        if(obj1.CurrentLevel < amount || obj2.CurrentLevel + amount > obj2.Capacity)
+        get
         {
-            Console.WriteLine("Can not do this , input another amount");
-            return;
+            if (_fullName == null)
+            {
+                _fullName = FirstName + " " + LastName;
+            }
+            return _fullName;
         }
-        obj1.CurrentLevel -= amount;
-        obj2.CurrentLevel += amount;
     }
 
-    public static WaterTank operator +(WaterTank obj, double amount)
+    public Person(string firstName, string lastName)
     {
-        if (obj.CurrentLevel + amount > obj.Capacity)
-        {
-            Console.WriteLine("Not enough capacity");
-            return obj;
-        }
-        return new WaterTank(obj.CurrentLevel + amount);
-    }
-
-    public static WaterTank operator -(WaterTank obj, double amount)
-    {
-        if (obj.CurrentLevel - amount < obj.Capacity)
-        {
-            Console.WriteLine("Not enough water");
-            return obj;
-        }
-        return new WaterTank(obj.CurrentLevel - amount);
+        FirstName = firstName;
+        LastName = lastName;
     }
 }
 
@@ -53,53 +30,327 @@ class Program
 {
     static void Main()
     {
-        WaterTank obj1 = new WaterTank();
-        WaterTank obj2 = new WaterTank();
-        obj1 = obj1 + 3000;
-        obj2 = obj2 + 5000;
-        WaterTank.Transfer(obj1, obj2, 2000);
-        Console.WriteLine(obj1);
-        Console.WriteLine(obj2);
+        Person person = new Person("Sarmen" ,"Baghmanyan");
+        Console.WriteLine(person.FullName); 
+        
+        person.FirstName = "Аreg";
+        Console.WriteLine(person.FullName); 
     }
 }
-*/
-class InkReservoir
+
+/*Task 2 **************************************************************/
+
+class Product
 {
-    public string Color {get; private set;}
-    public double InkAmount {get; private set;}
+    private decimal _price;
+    private int _stock;
 
-    public InkReservoir(string color, double inkAmount)
+    public decimal Price
     {
-        Color = color;
-        InkAmount = inkAmount;
+        get => _price;
+        set => _price = value < 0 ? 0 : value;
     }
 
-    public static InkReservoir operator +(InkReservoir a, InkReservoir b)
+    public int Stock
     {
-        if (a.Color == b.Color)
-        {
-            return new InkReservoir(a.Color, a.InkAmount + b.InkAmount);
-        }
-        else
-        {
-            Console.WriteLine("Can not combine different colours");
-            return a;
-        }
+        get => _stock;
+        set => _stock = value < 0 ? 10 : value;
     }
 
-    public static InkReservoir operator -(InkReservoir reservoir, double amount)
+    public Product(decimal price, int stock)
     {
-        if (amount <= 0)
-        {
-            Console.WriteLine("Can not do this , input digit higher than 0");
-            return reservoir;
-        }
-        return new InkReservoir(reservoir.Color, reservoir.InkAmount - amount);
-    }
-
-    public override string ToString()
-    {
-        return $"Color: {Color}, Amount: {InkAmount}";
+        Price = price;
+        Stock = stock;
     }
 }
+
+class Program
+{
+    static void Main()
+    {
+        Product product1 = new Product(100, 20);
+        Console.WriteLine($"Product 1 - Price: {product1.Price}, Stock: {product1.Stock}");
+        
+        Product product2 = new Product(-50, -5);
+        Console.WriteLine($"Product 2 - Price: {product2.Price}, Stock: {product2.Stock}");
+    }
+}
+
+/*Task 3 **************************************************************/
+
+
+class TimePeriod
+{
+    public int TotalSeconds { get; set; }
+
+    public string FormattedTime
+    {
+        get
+        {
+            int hours = TotalSeconds / 3600; 
+            int minutes = (TotalSeconds % 3600) / 60; 
+            int seconds = TotalSeconds % 60; 
+
+            return hours + ":" + minutes + ":" + seconds;
+        }
+    }
+
+         static void Main()
+         {
+            TimePeriod timePeriod = new TimePeriod();
+        
+            timePeriod.TotalSeconds = 7222;
+        
+            Console.WriteLine(timePeriod.FormattedTime);
+        }
+}
+
+/*Task 4 **************************************************************/
+
+class Students
+{
+    private string[] subjects;
+    private int[] grades;
+    private int size;
+
+    public Students(int capacity)
+    {
+        subjects = new string[capacity];
+        grades = new int[capacity];
+        size = 0;
+    }
+
+    public int this[string subject]
+    {
+        get
+        {
+            for (int i = 0; i < size; i++)
+            {
+                if (subjects[i] == subject)
+                {
+                    return grades[i];
+                }
+            }
+            return -1; 
+        }
+        set
+        {
+            for (int i = 0; i < size; i++)
+            {
+                if (subjects[i] == subject)
+                {
+                    grades[i] = value;
+                    return;
+                }
+            }
+            if (size < subjects.Length)
+            {
+                subjects[size] = subject;
+                grades[size] = value;
+                size++;
+            }
+            else
+            {
+                Console.WriteLine("Can not add , there is no space");
+            }
+        }
+    }
+
+    public void PrintGrades()
+    {
+        Console.WriteLine("Grades of students:");
+        for (int i = 0; i < size; i++)
+        {
+            Console.WriteLine($"{subjects[i]}: {grades[i]}");
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Students student = new Students(5);
+
+        student["Math"] = 90;
+        student["Physics"] = 85;
+
+        Console.WriteLine($"Grade of math: {student["Math"]}");
+        Console.WriteLine($"Grade of history: {student["History"]}"); 
+
+        student.PrintGrades();
+    }
+}
+
+/*Task 5 **************************************************************/
+
+
+class Grid3D
+{
+    private int sizeX, sizeY, sizeZ;
+
+    private int[,,] grid;
+
+    public Grid3D(int x, int y, int z)
+    {
+        if (x <= 0 || y <= 0 || z <= 0 ) throw new ArgumentOutOfRangeException("Input must be positive");
+        sizeX = x;
+        sizeY = y;
+        sizeZ = z;
+        grid = new int[x , y , z];
+    }
+    public int this[int x, int y, int z]
+    {
+        get
+        {
+            if (!IsValid(x , y , z)) throw new ArgumentException("Index is not valid");
+            return grid[x , y , z];
+        }
+        set
+        {
+            if (!IsValid(x,y,z)) throw new ArgumentException("Index is not valid");
+            grid[x , y , z] = value;
+        }
+    }
+    private bool IsValid(int x, int y, int z)
+    {
+        if (x >= 0 && y >= 0 && z >= 0 && x < sizeX && y < sizeY && z < sizeZ) return true;
+        return false;
+    }
+    public void PrintGrid()
+    {
+        for (int x = 0 ; x < sizeX ; x++)
+        {
+            for (int y = 0 ; y < sizeY ; y++)
+            {
+                for ( int z = 0 ; z < sizeZ ; z++)
+                {
+                    Console.WriteLine($"{x}, {y}, {z} = {grid[x, y, z]}");
+
+                }
+            }
+        }
+    }
+}
+class Program
+{
+    static void Main()
+    {
+        Grid3D grid = new Grid3D(2, 2, 1);
+        grid[0 , 0 , 0] = 10;
+        grid[1 , 0 , 0] = 20;
+        grid[1 , 1 , 0] = 24;
+        grid.PrintGrid();
+    }
+}
+
+/*Task 6 **************************************************************/
+
+class Person
+{
+    public int id {get;}
+    public string? name {get;}
+
+    public Person(int id , string name)
+    {
+        this.id = id;
+        this.name = name;
+    }
+}
+class ContactArray
+{
+    private Person[] contacts;
+
+    public ContactArray(Person[] contacts)
+    {
+        this.contacts = contacts;
+    }
+    public Person this[int  id]
+    {
+        get 
+        {
+            foreach (var i in contacts)
+            {
+                if (i.id == id) return i;
+            }
+            return null;
+        }
+    }
+    public Person this[string name]
+    {
+        get 
+        {
+            foreach(var i in contacts)
+            {
+                if(i.name == name) return i;
+            }
+            return null;
+        }
+    }
+}
+
+/*Task 5 *****************************************************************************/
+class CachedObject
+{
+    public string Data;
+
+    public CachedObject(string data)
+    {
+        Data = data;
+    }
+}
+
+class SimpleCache
+{
+    private static int totalCachedObjects = 0;
+    private CachedObject[] cache;
+    private int count = 0;
+
+    public SimpleCache(int maxSize)
+    {
+        cache = new CachedObject[maxSize];
+    }
+
+    public void Add(string data)
+    {
+        if (count >= cache.Length) 
+        {
+            for (int i = 1; i < cache.Length; i++)
+            {
+                cache[i - 1] = cache[i];
+            }
+            count--; 
+        }
+
+        cache[count] = new CachedObject(data);
+        count++;
+        totalCachedObjects++;
+    }
+
+    public CachedObject this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= count)
+                throw new IndexOutOfRangeException("Invalid  index");
+            return cache[index];
+        }
+    }
+
+    public void PrintCache()
+    {
+        Console.WriteLine("Cache data:");
+        for (int i = 0; i < count; i++)
+        {
+            Console.WriteLine(cache[i].Data);
+        }
+    }
+
+    public static void PrintTotalCachedObjects()
+    {
+        Console.WriteLine($"Total  objects: {totalCachedObjects}");
+    }
+}
+
+
 
