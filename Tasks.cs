@@ -127,7 +127,7 @@ class AirVehicle : Vehicle
     public AirVehicle (int FuelLevel, int FuelCapacity) : base (FuelLevel, FuelCapacity){}
     public override void Move()
     {
-        Console.WriteLine("Your vehicle is moving on the ground");
+        Console.WriteLine("Your vehicle is flying in the sky");
         ConsumeFuel(20);
     }
 }
