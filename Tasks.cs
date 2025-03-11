@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-/*
+/*Task 1*************************/
 abstract class PaymentMethod
 {
     protected double balance;
@@ -71,7 +71,7 @@ class CreditCard : PaymentMethod
         return amount * Fee;
     }
 }
-
+/*Task2**********************************/
 abstract class Vehicle
 {
     public int FuelLevel   {get; protected set;}
@@ -131,7 +131,7 @@ class AirVehicle : Vehicle
         ConsumeFuel(20);
     }
 }
-*/
+/*Task3****************************************/
 class User 
 {
     public string Name { get; private set; }
