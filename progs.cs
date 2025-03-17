@@ -1,385 +1,173 @@
+
 using System;
-using System.Dynamic;
-
-/*Task 1 **************************************************************/
-
-class CustomList
+class MyString
 {
-    private int[] items;
-
-    private int count;
-
-    public CustomList()
+    private char[] _str;
+    public int MyLength
     {
-        items = new int[3];
-        count = 0;
+        get { return _str.Length;}
     }
-     public int this[int index]
-     {
+
+    public char this[int index]
+    {
         get
         {
-        if (index < 0 || index >= count)  throw new Exception("Index out of range");
-            return items[index];
+            if (index < 0 || index >= MyLength) throw new Exception("Invalid index");
+            return _str[index];
         }
         set
         {
-            if (index < 0 || index >= count)
-                throw new Exception("Index out of range");
-                items[index] = value;
+            if (index < 0 || index >= MyLength) throw new Exception("Invalid index");
+            _str[index] = value;
         }
     }
-    public void Add(int value)
+    public MyString()
     {
-        if (count == items.Length) Resize();
-        items[count] = value;
-        count++;
+        _str = null;
     }
-    public void RemoveAt(int index)
+    public MyString(string str)
     {
-            if (index < 0 || index >= count) throw new Exception("Out of range");
-            for (int i = index; i < count - 1; i++)
-            {
-                items[i] = items[i+1];
-            }
-            count--;
+        _str = str.ToCharArray();
     }
-    private void Resize()
+    public MyString(string[] Strings)
     {
-        int newSize = items.Length * 2;
-        int[] newItems = new int[newSize];
-        for (int i = 0 ; i < count ; i++)
+        int totalLength = 0;
+
+        foreach(string str in Strings)
         {
-            newItems[i] = items[i];
+            totalLength += str.Length;
         }
-        items = newItems;
-    }
-    public void Print()
-    {
-        Console.Write("Items: ");
-        for (int i = 0 ;i < count ; i++)
-        {   
-            Console.Write(items[i] + " ");
-        }
-        Console.WriteLine();
-    }
-}
-class Program
-{
-    static void Main()
-    {
-        CustomList list = new CustomList();
-        list.Add(7);
-        list.Add(3);
-        list.Add(12);
-        list.Add(20);
-        list.RemoveAt(0);
-        list.Print();
-    }
-}
-
-/*Task 2 **************************************************************/
-
-class Storage
-{
-    private string[] data;
-    private string role;
-
-    public Storage(string role)
-    {
-        data = new string[10];
-        this.role = role;
-    }
-    public string this[int index]
-    {
-        get
-        {
-            if (role == "Admin" || role == "Manager")
-            {
-                if (index < 0 || index >= data.Length) throw new ArgumentOutOfRangeException("index is not valid");
-                return data[index];
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("You do not have permission");
-            }
-        }
-        set
-        {
-            if (role == "Admin")
-            {
-                if (index < 0 || index >= data.Length) throw new ArgumentOutOfRangeException("Index is not valid");
-                data[index] = value;
-            }
-            else throw new ArgumentOutOfRangeException("You do not have permission");
-        }
-    }
-    public void Print()
-    {
-        if (role == "Admin" || role == "Manager")
-        {
-            for (int i = 0 ; i < data.Length ; i++)
-            {
-                Console.WriteLine(data[i]);
-            }
-        }
-        else throw new Exception("You do not have permission");
-    }
-}
-class Program
-{
-    static void Main(){
-    Storage admin = new Storage("Admin");
-    Storage manager = new Storage("Manager");
-    Storage user = new Storage("User");
-
-    admin[0] = "Data new";
-    Console.WriteLine(admin[0]);
-    user[0] = "Smth";
-}
-}
-
-/*Task 3 **************************************************************/
-
-class Grid
-{
-    private int[,] gridData;
-
-    public Grid(int rows, int columns)
-    {
-        gridData = new int[rows, columns]; 
-    }
-
-    public int this[int row, int column]
-    {
-        get
-        {
-            if (row < 0 || row >= gridData.GetLength(0) || column < 0 || column >= gridData.GetLength(1))
-                throw new ArgumentOutOfRangeException("Invalid index");
-            return gridData[row, column];
-        }
-        set
-        {
-            if (row < 0 || row >= gridData.GetLength(0) || column < 0 || column >= gridData.GetLength(1))
-                throw new ArgumentOutOfRangeException("Invalid index");
-            gridData[row, column] = value;
-        }
-    }
-
-    public int[] GetRow(int row)
-    {
-        if (row < 0 || row >= gridData.GetLength(0))
-            throw new ArgumentOutOfRangeException("Invalid  index");
+        _str = new char[totalLength];
+        int totalIndex = 0;
         
-        int columns = gridData.GetLength(1);
-        int[] rowValues = new int[columns];
-        for (int i = 0; i < columns; i++)
+        foreach (string str in Strings)
         {
-            rowValues[i] = gridData[row, i];
-        }
-        return rowValues;
-    }
-
-    public int[] GetColumn(int column)
-    {
-        if (column < 0 || column >= gridData.GetLength(1))
-            throw new ArgumentOutOfRangeException("Invalid index");
-
-        int rows = gridData.GetLength(0);
-        int[] columnValues = new int[rows];
-        for (int i = 0; i < rows; i++)
-        {
-            columnValues[i] = gridData[i, column];
-        }
-        return columnValues;
-    }
-
-    public void PrintGrid()
-    {
-        int rows = gridData.GetLength(0);
-        int columns = gridData.GetLength(1);
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < columns; j++)
+            for (int i = 0 ; i < str.Length ; i++)
             {
-                Console.Write(gridData[i, j] + " ");
+                _str[totalIndex++] = str[i];
             }
-            Console.WriteLine();
         }
-    }
-}
-
-class Program
-{
-    static void Main()
+    }   
+    public MyString(char[] ch)
     {
-        Grid grid = new Grid(2, 2);
-        grid[0 , 0] = 0;
-        grid[0 , 1] = 1;
-        grid[1 , 0] = 2;
-        grid[1 , 1] = 3;
-        grid.PrintGrid();
-        int[] rows = grid.GetRow(1);
-        foreach (int i in rows)
+        _str = ch;
+    }
+    public bool Compare(string str)
+    {
+        if (str.Length != MyLength) return false;
+        for (int i = 0 ; i < MyLength ; i++)
         {
-            Console.Write(i + " ");
+            if (_str[i] != str[i]) return false;
         }
+        return true;
     }
-}
-/*Task 4 **************************************************************/
-
-class BankAccount
-{
-    private double balance;
-    public string AccountHolder { get; }
-
-    public BankAccount(string accountHolder, double initialBalance)
+    public bool Compare (MyString other)
     {
-        AccountHolder = accountHolder;
-        balance = initialBalance;
-    }
+        if (other == null || other._str.Length != _str.Length) return false;
 
-    public void Deposit(double amount)
-    {
-        if (amount > 0)
+        for (int i = 0 ; i < MyLength ; i++)
         {
-            balance += amount;
+            if (_str[i] != other._str[i]) return false;
         }
-        else
-        {
-            Console.WriteLine("Amount must be greater 0");
-        }
+        return true;
     }
-
-    public void Withdraw(double amount, out string transactionDetails)
+    public static bool operator ==(MyString a, MyString b)
     {
-        if (amount <= 0)
-        {
-            transactionDetails = "Amount must be greater 0";
-            return;
-        }
-        if (amount > balance)
-        {
-            transactionDetails = "Do not have much money";
-            return;
-        }
+        if (a == null && b == null) return true;
 
-        balance -= amount;
-        transactionDetails = $"Withraw was done";
-        return;
-    }
-
-    public static void Transfer(BankAccount acc,  BankAccount acc1, double amount, out string transactionDetails)
-    {
-        if (amount <= 0)
-        {
-            transactionDetails = "Amount must be greater 0.";
-            return;
-        }
-        if (amount > acc.balance)
-        {
-            transactionDetails = "Don't have much balance.";
-            return;
-        }
-        transactionDetails = "Transfer was done";
-        acc.balance -= amount;
-        acc1.balance += amount;
-    }
-    static class CurrencyConverter
-    {
-    private static double eurToUsd = 1.1; 
-    public static double ConvertEurToUsd(double Eur)
-     {
-        return Eur * eurToUsd;
-     }
-    }
-
-    public double GetBalance() => balance;
-
-    public void ShowBalance()
-    {
-        Console.WriteLine("Balance: " + balance);
-    }
-  
-}
-class Program
-{
-    static void Main()
-    {
-        BankAccount account1 = new BankAccount("Sarmen", 1000);
-        BankAccount account2 = new BankAccount("Anna", 500);
-
-        account1.Deposit(200);
+        if (a == null && b != null || a != null && b == null) return false;
         
-        account1.Withdraw(150, out string withdrawalDetails);
-        
-        Console.WriteLine(withdrawalDetails);
-        
-        BankAccount.Transfer(account1, account2, 250, out string transferDetails);
-        Console.WriteLine(transferDetails);
-        account1.ShowBalance();
-        account2.ShowBalance();
+        return a.Compare(b);
     }
-}
-
-/*Task 5 *****************************************************************************/
-class CachedObject
-{
-    public string Data;
-
-    public CachedObject(string data)
+    public static bool operator !=(MyString a,MyString b)
     {
-        Data = data;
+        return !(a == b);
     }
-}
-
-class SimpleCache
-{
-    private static int totalCachedObjects = 0;
-    private CachedObject[] cache;
-    private int count = 0;
-
-    public SimpleCache(int maxSize)
+    public override bool Equals(object? obj)
     {
-        cache = new CachedObject[maxSize];
-    }
+        MyString? other = obj as MyString;
 
-    public void Add(string data)
-    {
-        if (count >= cache.Length) 
+        if (other == null) return false;
+
+        if (other.MyLength != MyLength) return false;
+
+        for (int i = 0 ; i < MyLength ; i++)
         {
-            for (int i = 1; i < cache.Length; i++)
+            if (other._str[i] != _str[i]) return false;
+        }
+        return true;
+    }
+    public static bool Equals(MyString a, MyString b)
+    {
+        if (a == null && b == null) return true;
+
+        return a.Compare(b);
+    }
+    public override int GetHashCode()
+    {
+     int hash = 13;
+     foreach (char c in _str) hash = hash * 11 + c;
+     return hash;
+    }
+    public static MyString Join(char seperator , params MyString[] strings)
+    {
+        if (strings == null) throw new ArgumentNullException("Invalid strings");
+        int totalLength = 0;
+        foreach (var Str in strings)
+        {
+            totalLength += Str.MyLength;
+        }
+        totalLength += strings.Length - 1;
+        char[] res = new char[totalLength];
+
+        int CurrentIndex = 0;
+        for (int i = 0 ; i < strings.Length ; i++)
+        {
+            for (int j = 0 ; j < strings[i].MyLength ; j++)
             {
-                cache[i - 1] = cache[i];
+                res[CurrentIndex++] = strings[i]._str[j];
             }
-            count--; 
+            if (i < strings.Length - 1) res[CurrentIndex++] = seperator;
         }
-
-        cache[count] = new CachedObject(data);
-        count++;
-        totalCachedObjects++;
+        return new MyString(res);
     }
-
-    public CachedObject this[int index]
+    public bool StartsWith(string prefix)
     {
-        get
+        if (prefix.Length > MyLength) return false;
+
+        for (int i = 0 ; i < prefix.Length ; i++)
         {
-            if (index < 0 || index >= count)
-                throw new IndexOutOfRangeException("Invalid  index");
-            return cache[index];
+            if (_str[i] != prefix[i]) return false;
         }
+        return true;
     }
-
-    public void PrintCache()
+    public bool EndsWith(string suffix)
     {
-        Console.WriteLine("Cache data:");
-        for (int i = 0; i < count; i++)
+        if (suffix.Length > MyLength) return false;
+
+        for (int i = 0 ; i < suffix.Length ; i++)
         {
-            Console.WriteLine(cache[i].Data);
+            if (_str[MyLength - suffix.Length + i] != suffix[i]) return false;
         }
+        return true;
     }
-
-    public static void PrintTotalCachedObjects()
+    public static MyString operator +(MyString s1, MyString s2)
     {
-        Console.WriteLine($"Total  objects: {totalCachedObjects}");
+        int totalLength = s1.MyLength + s2.MyLength;
+        char[] res = new char[totalLength];
+        int CurrentIndex = 0;
+        
+        for (int i = 0 ; i < s1.MyLength ; i++)
+        {
+            res[CurrentIndex++] = s1._str[i];
+        }
+
+        for (int i = 0 ; i < s2.MyLength ; i++)
+        {
+            res[CurrentIndex++] = s2._str[i];
+        }
+
+        return new MyString(res);
     }
 }
+
