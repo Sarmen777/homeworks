@@ -2,10 +2,10 @@ using System;
 
 class Parent
 {
-    public string Name { get;}
-    public int Age {get;}
+    public string Name { get; private set}
+    public int Age {get; private set}
 
-    public int Salary {get;}
+    public int Salary {get; private set}
 
     public Parent (string name , int age , int salary)
     {
@@ -21,8 +21,8 @@ class Parent
 }
 class Child
 {
-    public string Name { get;}
-    public int Age {get;}
+    public string Name { get; private set;}
+    public int Age {get; private set;}
 
     public Parent Mother;
     public Parent Father;
