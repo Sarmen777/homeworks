@@ -12,7 +12,7 @@ class Module
         Duration = duration;
     }
 }
-class Course
+abstract class Course
 {
     public string Name {get;}
     public int Payment {get;}
