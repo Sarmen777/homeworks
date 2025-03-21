@@ -50,7 +50,10 @@ class MyString
     }   
     public MyString(char[] ch)
     {
-        _str = ch;
+        _str = new char[ch.Length];
+        for (int i = 0 ; i < ch.Length ; i++){
+            _str[i] = ch[i];
+        }
     }
     public bool Compare(string str)
     {
