@@ -57,7 +57,7 @@ class School
     {
         foreach (var instructor in Courses)
         {
-            Console.WriteLine(instructor.GetName());;
+            Console.WriteLine(instructor);;
         }
     }
 }
