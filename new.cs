@@ -1,98 +1,113 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
-public static class MyMemoize
+public class NotificationMessage
 {
-    public static Func<T , T> Memoize<T>(Func<T , T> func)
+    public string Title { get; set; }
+    public string Body { get; set; }
+    public string Recipient { get; set; }
+
+    public NotificationMessage(string title, string body, string recipient)
     {
-         Dictionary<T , T> cache = new Dictionary<T , T>();
-
-        return (T input) =>
-        {
-            if (cache.ContainsKey(input))
-            {
-                Console.WriteLine("From cache");
-                return cache[input];
-            }
-            return cache[input] = func(input);
-        };
-
+        Title = title;
+        Body = body;
+        Recipient = recipient;
     }
 }
-public static class CacheManager
+public interface INotificationSender
 {
-    public static Tuple<Func<int , bool> , Action> ManagedCache()
+    void Send(NotificationMessage message);
+}
+
+public class EmailSender : INotificationSender
+{
+    public void Send(NotificationMessage message)
     {
-        Dictionary<int , bool> cache = new Dictionary<int , bool>();
-        Func<int , bool> IsPrime = x =>
-        {
-            if (cache.ContainsKey(x))
-            {
-                Console.WriteLine("From cache");
-                return cache[x];
-            }
-            if (x < 2)
-            {
-                cache[x] = false;
-                return cache[x];
-            }
-            for (int i = 2 ; i * i <= x ; i++)
-            {
-                if (x % i == 0)
-                {
-                    cache[x] = false;
-                    return cache[x];
-                }
-            }
-            cache[x] = true;
-            return cache[x];
-        };
-        Action ClearCache = () =>
-        {
-            cache.Clear();
-            Console.WriteLine("Cache cleared");
-        };
-        return Tuple.Create(IsPrime, ClearCache);
+        Console.WriteLine($"[Email] To: {message.Recipient}\nTitle: {message.Title}\nBody: {message.Body}");
     }
 }
-public static class ListExtensions
+
+public class SmsSender : INotificationSender
 {
-    public static List<T> Filter<T> (this List<T> list, Func <T , bool> func)
+    public void Send(NotificationMessage message)
     {
-        List<T> tmp = new List<T>();
-         foreach (T item in list)
-         {
-            if (func(item))
-            {
-                tmp.Add(item);
-            }
-         }
-         return tmp;
+        Console.WriteLine($"[SMS] To: {message.Recipient}\nBody: {message.Body}");
     }
-    public static List<T> Map<T> (this List<T> list, Func <T , T> func)
+}
+
+public class PushNotificationSender : INotificationSender
+{
+    public void Send(NotificationMessage message)
     {
-        List<T> tmp = new List<T>();
-        foreach (T item in list)
-        {
-            tmp.Add(func(item));
-        }
-        return tmp;
+        Console.WriteLine($"[Push] To: {message.Recipient}\nTitle: {message.Title}\nBody: {message.Body}");
     }
-    public static bool Every<T> (this List<T> list, Func<T , bool> func)
+}
+public class TelegramSender : INotificationSender
+{
+    public void Send(NotificationMessage message)
     {
-        foreach (T item in list)
-        {
-            if (!func(item)) return false;
-        }
-        return true;
+        Console.WriteLine($"[Telegram] To: {message.Recipient}\nTitle: {message.Title}\nBody: {message.Body}");
     }
-    public static bool Some<T> (this List<T> list , Func<T , bool> func)
+}
+
+public class NotificationManager
+{
+    private readonly List<INotificationSender> senders = new List<INotificationSender>();
+
+    public event Action<NotificationMessage> OnNotificationReady;
+    public event Action<DateTime, NotificationMessage> OnNotificationSent;
+
+    public NotificationManager(IEnumerable<INotificationSender> notificationSenders)
     {
-        foreach (T item in list)
+        senders.AddRange(notificationSenders);
+        OnNotificationReady += SendToAll;
+    }
+
+    public void PrepareNotification(NotificationMessage message)
+    {
+        OnNotificationReady?.Invoke(message);
+    }
+
+    private void SendToAll(NotificationMessage message)
+    {
+        foreach (var sender in senders)
         {
-            if (func(item)) return true;
+            sender.Send(message);
+            OnNotificationSent?.Invoke(DateTime.Now, message);
         }
-        return false;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        List<INotificationSender> senders = new List<INotificationSender>
+        {
+            new EmailSender(),
+            new SmsSender(),
+            new PushNotificationSender(),
+            new TelegramSender() 
+        };
+
+        NotificationManager manager = new NotificationManager(senders);
+
+        manager.OnNotificationReady += message =>
+        {
+            Console.WriteLine($"Notification ready for {message.Recipient}");
+        };
+
+        manager.OnNotificationSent += (time, message) =>
+        {
+            Console.WriteLine($"Sent at {time:HH:mm:ss} to {message.Recipient}");
+        };
+
+        NotificationMessage notification = new NotificationMessage(
+             "Bank Alert",
+             "Your account balance changed by $200.",
+             "customer@example.com"
+        );
+
+        manager.PrepareNotification(notification);
     }
 }
